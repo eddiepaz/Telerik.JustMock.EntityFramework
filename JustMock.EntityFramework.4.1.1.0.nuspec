@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>JustMock.EntityFramework.4</id>
+        <version>1.1.0</version>
+        <title>JustMock.EntityFramework.4</title>
+        <authors>Eddie Paz</authors>
+        <owners>Eddie Paz</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+        <projectUrl>https://github.com/eddiepaz/Telerik.JustMock.EntityFramework</projectUrl>
+        <iconUrl>http://www.telerik.com/sfimages/default-source/logos/jm_32x32.png?sfvrsn=2</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Mock DbSet and DbContext mocking amenities for JustMock Lite.</description>
+        <copyright>Copyright 2016</copyright>
+        <tags>justmock ef entityframework</tags>
+        <dependencies>
+            <dependency id="JustMock" version="2014.1.1424.1" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.0\Telerik.JustMock.EntityFramework.dll" target="lib\net40\Telerik.JustMock.EntityFramework.dll" />
+        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.0\Telerik.JustMock.EntityFramework.xml" target="lib\net40\Telerik.JustMock.EntityFramework.xml" />
+        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.5\Telerik.JustMock.EntityFramework.dll" target="lib\net45\Telerik.JustMock.EntityFramework.dll" />
+        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.5\Telerik.JustMock.EntityFramework.xml" target="lib\net45\Telerik.JustMock.EntityFramework.xml" />
+    </files>
+</package>
