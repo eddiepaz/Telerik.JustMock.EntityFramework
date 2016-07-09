@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !NET40
+using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,3 +33,4 @@ namespace Telerik.JustMock.EntityFramework
 	}
 
 }
+#endif

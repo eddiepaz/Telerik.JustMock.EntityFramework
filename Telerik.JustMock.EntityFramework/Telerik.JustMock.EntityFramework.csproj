@@ -13,14 +13,15 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
   </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\$(Configuration)\$(TargetFrameworkVersion)\</OutputPath>
+    <DefineConstants Condition="$(DefineConstants) == ''">TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -28,19 +29,28 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\$(Configuration)\$(TargetFrameworkVersion)\</OutputPath>
+    <DefineConstants Condition="$(DefineConstants) == ''">TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\Telerik.JustMock.EntityFramework.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFrameworkVersion)\Telerik.JustMock.EntityFramework.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <!-- NET 40 -->
+    <Reference Include="EntityFramework" Condition="'$(TargetFrameworkVersion)' == 'v4.0'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer" Condition="'$(TargetFrameworkVersion)' == 'v4.0'">
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <!-- NET 45+ -->
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" Condition="'$(TargetFrameworkVersion)' != 'v4.0'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
+    <Reference Include="EntityFramework.SqlServer" Condition="'$(TargetFrameworkVersion)' != 'v4.0'">
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -62,9 +72,9 @@
     <Compile Include="MockDbSet.cs" />
     <Compile Include="EntityFrameworkMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDbAsyncEnumerable.cs" />
-    <Compile Include="TestDbAsyncEnumerator.cs" />
-    <Compile Include="TestDbAsyncQueryProvider.cs" />
+    <Compile Include="TestDbAsyncEnumerable.cs" Condition="'$(TargetFrameworkVersion)' != 'v4.0'" />
+    <Compile Include="TestDbAsyncEnumerator.cs" Condition="'$(TargetFrameworkVersion)' != 'v4.0'" />
+    <Compile Include="TestDbAsyncQueryProvider.cs" Condition="'$(TargetFrameworkVersion)' != 'v4.0'" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

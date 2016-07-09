@@ -10,21 +10,25 @@ using System.Reflection;
 
 namespace Telerik.JustMock.EntityFramework
 {
-	/// <summary>
-	/// A user-provided delegate that can return the value of the primary key of the entity.
-	/// The return value should be either:
-	/// * the value of the primary key if is non-composite
-	/// * an IEnumerable with the values of the key columns, if the key is composite
-	/// </summary>
-	public delegate object GetIdFunction<TEntity>(TEntity entity) where TEntity : class;
+  /// <summary>
+  /// A user-provided delegate that can return the value of the primary key of the entity.
+  /// The return value should be either:
+  /// * the value of the primary key if is non-composite
+  /// * an IEnumerable with the values of the key columns, if the key is composite
+  /// </summary>
+  public delegate object GetIdFunction<TEntity>(TEntity entity) where TEntity : class;
 
-	/// <summary>
-	/// An in-memory mock DbSet. DbContext instances created by <see cref="EntityFrameworkMock.Create"/> are
-	/// initialized with instances of this class.
-	/// </summary>
-	/// <typeparam name="TEntity">The entity type.</typeparam>
-	public class MockDbSet<TEntity> : DbSet<TEntity>, IDbAsyncEnumerable<TEntity>, IQueryable<TEntity> where TEntity : class
-	{
+  /// <summary>
+  /// An in-memory mock DbSet. DbContext instances created by <see cref="EntityFrameworkMock.Create"/> are
+  /// initialized with instances of this class.
+  /// </summary>
+  /// <typeparam name="TEntity">The entity type.</typeparam>
+#if !NET40
+  public class MockDbSet<TEntity> : DbSet<TEntity>, IDbAsyncEnumerable<TEntity>, IQueryable<TEntity> where TEntity : class
+#else
+  public class MockDbSet<TEntity> : DbSet<TEntity>, IQueryable<TEntity> where TEntity : class
+#endif
+  {
 		private ICollection<TEntity> data;
 		private IQueryable<TEntity> asQueryable;
 
@@ -178,11 +182,6 @@ namespace Telerik.JustMock.EntityFramework
 			}
 		}
 
-		public virtual IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()
-		{
-			return new TestDbAsyncEnumerator<TEntity>(this.data.GetEnumerator());
-		}
-
 		public virtual Type ElementType
 		{
 			get { return this.asQueryable.ElementType; }
@@ -195,8 +194,12 @@ namespace Telerik.JustMock.EntityFramework
 
 		public virtual IQueryProvider Provider
 		{
-			get { return new TestDbAsyncQueryProvider<TEntity>(this.asQueryable.Provider); }
-		}
+#if !NET40
+      get { return new TestDbAsyncQueryProvider<TEntity>(this.asQueryable.Provider); }
+#else
+      get { return this.asQueryable.Provider; }
+#endif
+    }
 
 		public virtual IEnumerator<TEntity> GetEnumerator()
 		{
@@ -207,5 +210,12 @@ namespace Telerik.JustMock.EntityFramework
 		{
 			return this.data.GetEnumerator();
 		}
-	}
+
+#if !NET40
+		public virtual IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()
+		{
+			return new TestDbAsyncEnumerator<TEntity>(this.data.GetEnumerator());
+		}
+#endif
+  }
 }

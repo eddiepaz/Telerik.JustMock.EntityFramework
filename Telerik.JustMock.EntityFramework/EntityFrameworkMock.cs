@@ -2,14 +2,13 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Telerik.JustMock.EntityFramework
 {
-	/// <summary>
-	/// The entry point for creating mock DbContexts for testing.
-	/// </summary>
-	public static class EntityFrameworkMock
+  /// <summary>
+  /// The entry point for creating mock DbContexts for testing.
+  /// </summary>
+  public static class EntityFrameworkMock
 	{
 		/// <summary>
 		/// Creates a mock DbContext and initializes the DbSet and IDbSet properties on the instance to mock DbSets.
@@ -48,7 +47,11 @@ namespace Telerik.JustMock.EntityFramework
 			{
 				if (prop.Property.GetSetMethod() != null)
 				{
-					prop.Property.SetValue(dbContext, prop.Value);
+#if !NET40
+          prop.Property.SetValue(dbContext, prop.Value);
+#else
+          prop.Property.SetValue(dbContext, prop.Value, null);
+#endif
 				}
 				else
 				{

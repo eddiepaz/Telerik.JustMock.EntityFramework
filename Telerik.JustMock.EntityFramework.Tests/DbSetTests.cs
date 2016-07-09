@@ -49,8 +49,10 @@ namespace Telerik.JustMock.EntityFramework.Tests
 			public DbSet<Investment> Investments { get; set; }
 		}
 
-		[TestMethod]
-		public async Task Bind_BindData_DataIsThere()
+#if !NET40
+
+    [TestMethod]
+		public async Task Bind_BindData_DataIsThere_Async()
 		{
 			var ctx = Mock.Create<TheDbContext>().PrepareMock();
 
@@ -67,7 +69,7 @@ namespace Telerik.JustMock.EntityFramework.Tests
 		}
 
 		[TestMethod]
-		public async Task Bind_NoBind_EmptyBackingCollection()
+		public async Task Bind_NoBind_EmptyBackingCollection_Async()
 		{
 			var ctx = Mock.Create<TheDbContext>().PrepareMock();
 			var people = await ctx.People.ToListAsync();
@@ -75,7 +77,7 @@ namespace Telerik.JustMock.EntityFramework.Tests
 		}
 
 		[TestMethod]
-		public async Task Add_EntityIsAddedToImplicitBackingCollection()
+		public async Task Add_EntityIsAddedToImplicitBackingCollection_Async()
 		{
 			var ctx = Mock.Create<TheDbContext>().PrepareMock();
 
@@ -87,24 +89,7 @@ namespace Telerik.JustMock.EntityFramework.Tests
 		}
 
 		[TestMethod]
-		public void Add_EntityIsAddedToBoundCollection()
-		{
-			var ctx = Mock.Create<TheDbContext>().PrepareMock();
-
-			var list = new List<Person>
-			{
-				new Person { Id = 1, Name = "a" }
-			};
-			ctx.People.Bind(list);
-
-			ctx.People.Add(new Person { Name = "b" });
-
-			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual("b", list[1].Name);
-		}
-
-		[TestMethod]
-		public async Task AddRange_EntitiesAreAddedToBoundCollection()
+		public async Task AddRange_EntitiesAreAddedToBoundCollection_Async()
 		{
 			var ctx = Mock.Create<TheDbContext>().PrepareMock();
 
@@ -122,6 +107,115 @@ namespace Telerik.JustMock.EntityFramework.Tests
 
 			CollectionAssert.AreEqual(newData, list);
 			CollectionAssert.AreEqual(newData, await ctx.People.ToListAsync());
+		}
+
+		[TestMethod]
+		public async Task Queries_DataIsThere_Async()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+			var list = new List<Person>
+			{
+				new Person { Id = 1, Name = "x" },
+				new Person { Id = 2, Name = "x" },
+				new Person { Id = 3, Name = "y" }
+			};
+			ctx.People.Bind(list);
+			var xes = await ctx.People.Where(p => p.Name == "x").ToListAsync();
+
+			Assert.AreEqual(2, xes.Count);
+		}
+
+#endif
+
+    [TestMethod]
+		public void Bind_BindData_DataIsThere()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+
+			var list = new List<Person>
+			{
+				new Person { Id = 1, Name = "a" }
+			};
+
+			ctx.People.Bind(list);
+
+
+			var data = ctx.People.ToList();
+			Assert.AreSame(list[0], data[0]);
+		}
+
+		[TestMethod]
+		public void Bind_NoBind_EmptyBackingCollection()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+			var people = ctx.People.ToList();
+			Assert.AreEqual(0, people.Count);
+		}
+
+		[TestMethod]
+		public void Add_EntityIsAddedToImplicitBackingCollection()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+
+			ctx.People.Add(new Person { Name = "b" });
+			var list = ctx.People.ToList();
+
+			Assert.AreEqual(1, list.Count);
+			Assert.AreEqual("b", list[0].Name);
+		}
+
+		[TestMethod]
+		public void AddRange_EntitiesAreAddedToBoundCollection()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+
+			var list = new List<Person>();
+			ctx.People.Bind(list);
+
+			var newData = new[]
+				{
+					new Person { Name = "a" },
+					new Person { Name = "b" },
+					new Person { Name = "c" },
+				};
+
+			ctx.People.AddRange(newData);
+
+			CollectionAssert.AreEqual(newData, list);
+			CollectionAssert.AreEqual(newData, ctx.People.ToList());
+		}
+
+		[TestMethod]
+		public void Queries_DataIsThere()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+			var list = new List<Person>
+			{
+				new Person { Id = 1, Name = "x" },
+				new Person { Id = 2, Name = "x" },
+				new Person { Id = 3, Name = "y" }
+			};
+			ctx.People.Bind(list);
+			var xes = ctx.People.Where(p => p.Name == "x").ToList();
+
+			Assert.AreEqual(2, xes.Count);
+		}
+
+		[TestMethod]
+		public void Add_EntityIsAddedToBoundCollection()
+		{
+			var ctx = Mock.Create<TheDbContext>().PrepareMock();
+
+			var list = new List<Person>
+			{
+				new Person { Id = 1, Name = "a" }
+			};
+			ctx.People.Bind(list);
+
+			ctx.People.Add(new Person { Name = "b" });
+
+			Assert.AreEqual(2, list.Count);
+			Assert.AreEqual("b", list[1].Name);
 		}
 
 		[TestMethod]
@@ -289,21 +383,5 @@ namespace Telerik.JustMock.EntityFramework.Tests
 			Assert.IsTrue(notified);
 			Assert.AreEqual(4, list.Count);
 		}
-
-		[TestMethod]
-		public async Task Queries_DataIsThere()
-		{
-			var ctx = Mock.Create<TheDbContext>().PrepareMock();
-			var list = new List<Person>
-			{
-				new Person { Id = 1, Name = "x" },
-				new Person { Id = 2, Name = "x" },
-				new Person { Id = 3, Name = "y" }
-			};
-			ctx.People.Bind(list);
-			var xes = await ctx.People.Where(p => p.Name == "x").ToListAsync();
-
-			Assert.AreEqual(2, xes.Count);
-		}
-	}
+  }
 }
