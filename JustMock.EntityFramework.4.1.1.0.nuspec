@@ -19,8 +19,6 @@
     </metadata>
     <files>
         <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.0\Telerik.JustMock.EntityFramework.dll" target="lib\net40\Telerik.JustMock.EntityFramework.dll" />
-        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.0\Telerik.JustMock.EntityFramework.xml" target="lib\net40\Telerik.JustMock.EntityFramework.xml" />
         <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.5\Telerik.JustMock.EntityFramework.dll" target="lib\net45\Telerik.JustMock.EntityFramework.dll" />
-        <file src="Telerik.JustMock.EntityFramework\bin\Release\v4.5\Telerik.JustMock.EntityFramework.xml" target="lib\net45\Telerik.JustMock.EntityFramework.xml" />
     </files>
 </package>

@@ -24,7 +24,7 @@ ECHO.
 ECHO Building v4.5 ...
 ECHO.
 
-MSBUILD.EXE "%SOLUTION%" /p:Configuration=Release /p:TargetFrameworkVersion=v4.5 /v:m
+MSBUILD.EXE "%SOLUTION%" /p:Configuration=Release /p:TargetFrameworkVersion=v4.5 /p:DefineConstants="NET45;Trace" /v:m
 IF ERRORLEVEL 1 GOTO BUILD_ERROR
 
 GOTO OUT
